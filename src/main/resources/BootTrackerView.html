@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabbed Interface</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            margin-right: 10px;
+        }
+
+        .tab.active {
+            background-color: #ddd;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        #searchInput {
+            width: 300px;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sort-arrow {
+            position: absolute;
+            right: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: blue;
+            display: none;
+        }
+
+        .sort-arrow.active {
+            display: inline;
+        }
+
+        .tree {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .tree li {
+            cursor: pointer;
+        }
+
+        .tree li.has-children {
+            position: relative;
+        }
+
+        .tree li.has-children::before {
+            content: '+';
+            position: absolute;
+            left: -15px;
+            top: 0;
+        }
+
+        .tree li.open::before {
+            content: '-';
+        }
+
+        .tree ul {
+            display: none;
+        }
+
+        .tree li.open > ul {
+            display: block;
+        }
+
+        .percent {
+            color: red;
+        }
+
+        .methodInfo {
+            margin-left: 10px;
+            /* 设置间隔 */
+        }
+
+        .callTime {
+            margin-left: 10px;
+            color: blue;
+        }
+
+        /* 定义时间列的宽度 */
+        .time-column {
+            width: 100px; /* 设置宽度为50像素 */
+            white-space: nowrap; /* 防止内容换行 */
+            overflow: hidden; /* 隐藏超出的内容 */
+            text-overflow: ellipsis; /* 用省略号表示被隐藏的部分 */
+        }
+    </style>
+</head>
+<body>
+<h1>SpringBoot 启动耗时</h1>
+<div class="tabs">
+    <div class="tab  active" data-tab="tree">调用树</div>
+    <div class="tab" data-tab="list">方法列表</div>
+</div>
+<div class="tab-content active" id="treeTab">
+    <ul id="tree" class="tree">
+        <!-- Tree nodes will be inserted here by JavaScript -->
+    </ul>
+</div>
+<div class="tab-content" id="listTab">
+    <input type="text" id="searchInput" placeholder="类名或方法名...">
+    <table id="listTable">
+        <thead>
+        <tr>
+            <th class="time-column">执行时间（s）</th>
+            <th id="selftCallTimeHeader" class="time-column">自身的执行时间（s） <span class="sort-arrow">▼</span></th>
+            <th>方法</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- List rows will be inserted here by JavaScript -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    // Function to display list data
+    function displayList(data) {
+        const listTable = document.getElementById('listTable').getElementsByTagName('tbody')[0];
+        listTable.innerHTML = '';
+        data.forEach(item => {
+            const row = listTable.insertRow();
+            const callTimeCell = row.insertCell(0);
+            callTimeCell.classList.add('time-column');
+
+            const selftCallTimeCell = row.insertCell(1);
+            selftCallTimeCell.classList.add('time-column');
+
+            const methodInfoCell = row.insertCell(2);
+            methodInfoCell.textContent = item.methodInfo;
+
+            callTimeCell.textContent = item.callTime;
+            selftCallTimeCell.textContent = item.selfCallTime;
+        });
+    }
+
+    // Function to sort list data by category
+    function sortListByMethodInfo(data, ascending = true) {
+        if (ascending) {
+
+            return data.sort((a, b) => {
+                if (ascending) {
+                    return b.selfCallTime - a.selfCallTime;
+                }
+            });
+        } else {
+            return data;
+        }
+    }
+
+    // Function to create tree nodes
+    function createTree(data, parent) {
+        data.forEach(item => {
+            const li = document.createElement('li');
+
+            // 创建 percent 元素并添加样式
+            const percentSpan = document.createElement('span');
+            percentSpan.textContent = item.percent + '%';
+            percentSpan.classList.add('percent');
+
+            // 创建 methodInfo 元素
+            const methodInfoSpan = document.createElement('span');
+            methodInfoSpan.textContent = item.methodInfo;
+            methodInfoSpan.classList.add('methodInfo');
+
+            //创建 callTime 元素
+            const callTimeSpan = document.createElement('span');
+            callTimeSpan.textContent = item.callTime + 's';
+            callTimeSpan.classList.add('callTime');
+
+            // 将 percent 和 methodInfo 添加到 li 元素中
+            li.appendChild(percentSpan);
+            li.appendChild(callTimeSpan)
+            li.appendChild(methodInfoSpan);
+
+            if (item.children) {
+                li.classList.add('has-children');
+                const ul = document.createElement('ul');
+                createTree(item.children, ul);
+                li.appendChild(ul);
+            }
+            parent.appendChild(li);
+        });
+    }
+
+    // Load and initialize list data
+    async function initList() {
+        const listData = '#listData#'
+        displayList(listData);
+
+        let ascending = false;
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const filteredData = listData.filter(item => item.methodInfo.toLowerCase().includes(searchValue));
+            displayList(filteredData);
+        });
+
+        // Sort by category functionality
+        document.getElementById('selftCallTimeHeader').addEventListener('click', function () {
+
+            ascending = !ascending;
+
+            let sortedData = sortListByMethodInfo([...listData], ascending);
+            const searchValue = document.getElementById('searchInput').value;
+            //判断 searchInput 是否有值
+            if (searchValue) {
+                sortedData = sortedData.filter(item => item.methodInfo.toLowerCase().includes(searchValue.toLowerCase()));
+            }
+            displayList(sortedData);
+
+            const sortArrow = document.querySelector('#selftCallTimeHeader .sort-arrow');
+            sortArrow.classList.toggle('active', ascending);
+        });
+    }
+
+    // Load and initialize tree data
+    async function initTree() {
+        const treeData = '#treeData#'
+        const tree = document.getElementById('tree');
+        createTree(treeData, tree);
+
+        // Toggle tree nodes
+        tree.addEventListener('click', function (event) {
+            const target = event.target;
+            if (target.tagName === 'LI' && target.classList.contains('has-children')) {
+                target.classList.toggle('open');
+            }
+        });
+    }
+
+    // Initialize tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', function () {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            this.classList.add('active');
+            document.getElementById(this.dataset.tab + 'Tab').classList.add('active');
+        });
+    });
+
+    // Initialize both list and tree views
+    initList();
+    initTree();
+</script>
+</body>
+</html>
