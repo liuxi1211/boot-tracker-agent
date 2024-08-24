@@ -12,9 +12,9 @@
 2. 针对性代理, 针对关键类和接口做代理,避免全部代理, 性能损耗 10% 以内
 3. 使用简便, 耗时分析数据不需要任何三方工具,直接可以通过浏览器查看
 
-### 2. 使用方式
+### 2. 版本选择
 
-1. 版本选择, 根据 `SpringBoot` 版本区别 
+1. **版本选择, 根据 `SpringBoot` 版本区别** 
 
    如果项目本身没有依赖 `byte-buddy`则无需考虑, 直接使用 `boot-tracker-agent-dependencies.jar` 任何版本都可以
 
@@ -31,45 +31,44 @@
    >
    >```java
    ><dependency>
-   >    <groupId>net.bytebuddy</groupId>
-   >    <artifactId>byte-buddy</artifactId>
-   >    <version>1.12.13</version>
+   ><groupId>net.bytebuddy</groupId>
+   ><artifactId>byte-buddy</artifactId>
+   ><version>1.12.13</version>
    ></dependency>
    >```
 
-2. `boot-tracker-agent.jar` 和 `boot-tracker-agent-dependencies.jar` 选择
+2. **`boot-tracker-agent.jar` 和 `boot-tracker-agent-dependencies.jar` 选择**
 
    两个 jar 包区别就是 jar 包中是否包含依赖, 如果项目本身不包含 `byte-buddy` 依赖, 必须使用 `boot-tracker-agent-dependencies.jar` 
 
-   
 
-3. 项目启动参数指定 agent jar
+### 3. 使用方式
+
+1. **项目启动参数指定 agent jar**
 
    ```properties
-   -Xmx4g
-   -Xms4g
    -javaagent:C:\Users\windy\Desktop\origin-boot-tracker-agent.jar
    ```
 
-4. 启动数据
+2. **启动耗时文件获取**
 
-   启动分析文件默认存放路径为系统临时目录, 
+   启动分析文件默认存放路径为系统临时目录
 
-   linux 系统中路径为: `/tmp/BootTrackerView.html`
+   `linux ` 系统中路径为: `/tmp/BootTrackerView.html`
 
-   windows 系统中路径为: `C:\Users\*\AppData\Local\Temp\\BootTrackerView.html`
+   `windows ` 系统中路径为: `C:\Users\*\AppData\Local\Temp\\BootTrackerView.html`
 
-   本地调试, 控制台也会输出日志 `启动耗时文件：C:\Users\windy\AppData\Local\Temp\\BootTrackerView.html`
+   >本地调试, 控制台也会输出文件地址 `启动耗时文件：C:\Users\windy\AppData\Local\Temp\\BootTrackerView.html`
 
-### 3. 启动耗时数据分析
+### 4. 启动耗时数据分析
 
 启动耗时文件是一个 html 文件,使用浏览器直接打开, 主要有两个功能
 
-1. 调用树展示
+1. **调用树展示**
 
    ![image-20240824184955596](D:\workspace\java笔记\atm\README\image-20240824184955596.png)
 
-2. 方法列表搜索
+2. **方法列表搜索**
 
 ![image-20240824185013492](D:\workspace\java笔记\atm\README\image-20240824185013492.png)
 
@@ -85,8 +84,8 @@
 | path       | 自定义耗时数据文件路径, 默认系统临时目录                     | path=D:\JavaProject                                        |
 
 ```properties
--Xmx4g
--Xms4g
 -javaagent:C:\Users\windy\Desktop\boot-tracker-agent.jar=ignoretime=100,path=D:\JavaProject
 ```
+
+
 
