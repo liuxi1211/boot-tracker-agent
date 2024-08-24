@@ -1,6 +1,7 @@
 package com.lcsc.agent;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lcsc.agent.model.ListData;
 import com.lcsc.agent.model.MethodCall;
 import com.lcsc.agent.model.Node;
@@ -71,8 +72,14 @@ public class BootTrackerService {
             listData.add(item);
         }
 
-        String listJson = JSON.toJSONString(listData);
-
+        ObjectMapper objectMapper = new ObjectMapper();
+        String listJson;
+        try {
+            listJson = objectMapper.writeValueAsString(listData);
+        } catch (JsonProcessingException e) {
+            System.out.println("序列化树状调用失败:" + e.getMessage());
+            listJson = "[]";
+        }
         return listJson;
     }
 
@@ -91,7 +98,6 @@ public class BootTrackerService {
         return methodCalls;
     }
 
-
     private static String getTreeData() {
 
         Node root = getRootNode();
@@ -99,8 +105,14 @@ public class BootTrackerService {
         TreeData tree = getTree(root, root.getValue().getEndTime() - root.getValue().getStartTime());
 
         //暂时只展示 main 方法
-        String treeJson = "[" + JSON.toJSONString(tree) + "]";
-
+        ObjectMapper objectMapper = new ObjectMapper();
+        String treeJson;
+        try {
+            treeJson = "[" + objectMapper.writeValueAsString(tree) + "]";
+        } catch (JsonProcessingException e) {
+            System.out.println("序列化方法列表失败:" + e.getMessage());
+            treeJson = "[]";
+        }
         return treeJson;
     }
 

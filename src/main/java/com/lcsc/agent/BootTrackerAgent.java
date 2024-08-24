@@ -117,6 +117,7 @@ public class BootTrackerAgent {
         defaultInterfaceNames.add("org.springframework.context.Lifecycle");
         defaultInterfaceNames.add("org.springframework.context.ApplicationListener");
         defaultInterfaceNames.add("org.springframework.context.ApplicationContextInitializer");
+        defaultInterfaceNames.add("org.springframework.context.annotation.ImportBeanDefinitionRegistrar");
         return defaultInterfaceNames;
     }
 
