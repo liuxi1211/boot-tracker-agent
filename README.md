@@ -66,11 +66,11 @@
 
 1. **调用树展示**
 
-   ![调用树](https://github.com/liuxi1211/boot-tracker-agent/src/main/resources/images/tree.png)
+   ![调用树](https://github.com/liuxi1211/boot-tracker-agent/blob/main/src/main/resources/images/tree.png)
 
 2. **方法列表搜索**
 
-   ![方法列表](https://github.com/liuxi1211/boot-tracker-agent/src/main/resources/images/list.png)
+   ![方法列表](https://github.com/liuxi1211/boot-tracker-agent/blob/main/src/main/resources/images/list.png)
 
 
 
