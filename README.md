@@ -66,11 +66,11 @@
 
 1. **调用树展示**
 
-   ![image-20240824184955596](D:\workspace\java笔记\atm\README\image-20240824184955596.png)
+   ![调用树](https://github.com/liuxi1211/boot-tracker-agent/src/main/resources/images/tree.png)
 
 2. **方法列表搜索**
 
-![image-20240824185013492](D:\workspace\java笔记\atm\README\image-20240824185013492.png)
+   ![方法列表](https://github.com/liuxi1211/boot-tracker-agent/src/main/resources/images/list.png)
 
 
 
