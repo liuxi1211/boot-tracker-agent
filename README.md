@@ -10,7 +10,7 @@
 
 1. 使用  [Byte Buddy](https://bytebuddy.net/#/tutorial) 做动态代理, 相比其他动态代理, 性能更优
 2. 针对性代理, 针对关键类和接口做代理,避免全部代理, 性能损耗 10% 以内
-3. 使用简便, 耗时分析数据不需要任何三方工具,直接可以通过浏览器查看
+3. 使用简便, 耗时分析数据不需要任何三方工具,可以直接通过浏览器查看
 
 ### 2. 版本选择
 
@@ -58,11 +58,13 @@
 
    `windows ` 系统中路径为: `C:\Users\*\AppData\Local\Temp\\BootTrackerView.html`
 
-   >本地调试, 控制台也会输出文件地址 `启动耗时文件：C:\Users\windy\AppData\Local\Temp\\BootTrackerView.html`
+   >本地调试, 控制台也会输出文件地址 启动耗时文件：`C:\Users\windy\AppData\Local\Temp\\BootTrackerView.html`
 
 ### 4. 启动耗时数据分析
 
-启动耗时文件是一个 html 文件,使用浏览器直接打开, 主要有两个功能
+启动耗时文件是一个 html 文件,使用浏览器直接打开, 主要有两个功能 
+
+数据分析最好有一定源码基础，调用树本身可以当成一个火焰图看待，直接找到每个调用链路最深层耗时最多的方法，再通过方法名称和参数基本可以确定，如果最深层方法内部耗时仍然不明确，可以使用扩展参数 names 和 interfaces
 
 1. **调用树展示**
 
@@ -79,10 +81,11 @@
 | 参数       | 描述                                                         | 案例                                                       |
 | ---------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
 | ignoretime | 忽略耗时, 单位 ms, 默认值 100, 方法耗时低于指定值数据不采集,减小数据文件大小 | ignoretime=100                                             |
-| names      | 扩展代理类, 当需要进一步分时某个类耗时,可以指定 names, 多个用逗号分割 | names=com.ctrip.framework.apollo.ConfigService             |
-| interfaces | 扩展代理接口, 指定接口的所有实现类都将被代理                 | interfaces=org.springframework.context.ApplicationListener |
+| names      | 扩展类, 当需要进一步分析某个类耗时,可以通过 names 配置, 多个用逗号分割 | names=com.ctrip.framework.apollo.ConfigService             |
+| interfaces | 扩展接口, 指定接口的所有实现类都将打印方法耗时,多个用逗号分隔   | interfaces=org.springframework.context.ApplicationListener |
 | path       | 自定义耗时数据文件路径, 默认系统临时目录                     | path=D:\JavaProject                                        |
 
+综合配置案例：
 ```properties
 -javaagent:C:\Users\windy\Desktop\boot-tracker-agent.jar=ignoretime=100,path=D:\JavaProject
 ```
