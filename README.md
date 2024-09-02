@@ -87,7 +87,7 @@
 
 综合配置案例：
 ```properties
--javaagent:C:\Users\windy\Desktop\boot-tracker-agent.jar=ignoretime=100,path=D:\JavaProject
+-javaagent:C:\Users\windy\Desktop\boot-tracker-agent.jar=path=D:\JavaProject,names=com.ctrip.framework.apollo.ConfigService
 ```
 
 
