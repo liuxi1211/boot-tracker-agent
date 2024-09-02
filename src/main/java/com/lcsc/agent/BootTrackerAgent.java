@@ -62,7 +62,7 @@ public class BootTrackerAgent {
                     }
                     return false;
                 })
-        ).transform((builder, typeDescription, classLoader, module) ->
+        ).transform((builder, typeDescription, classLoader, module, protectionDomain) ->
                 builder.method(ElementMatchers.not(ElementMatchers.named("equals"))
                                 .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
                                 .and(ElementMatchers.not(ElementMatchers.named("toString")))
@@ -84,7 +84,7 @@ public class BootTrackerAgent {
         defaultNames.add("org.springframework.context.annotation.ComponentScanAnnotationParser");
         //版本兼容添加
         defaultNames.add("org.springframework.boot.SpringApplicationRunListeners");
-        defaultNames.add("com.ctrip.fremework.apollo.ConfigService");
+        defaultNames.add("com.ctrip.framework.apollo.ConfigService");
         return defaultNames;
     }
 
@@ -151,7 +151,7 @@ public class BootTrackerAgent {
                             break;
                         case "interfaces":
                             List<String> interfaces = AgentProperties.getInterfaces();
-                            for (String interfaceName : value.split(",")) {
+                            for (String interfaceName : value.split(";")) {
                                 if (!defaultInterfaceNames.contains(interfaceName)) {
                                     interfaces.add(interfaceName);
                                 }
@@ -159,7 +159,7 @@ public class BootTrackerAgent {
                             break;
                         case "names":
                             List<String> names = AgentProperties.getNames();
-                            for (String name : value.split(",")) {
+                            for (String name : value.split(";")) {
                                 if (!defaultNames.contains(name)) {
                                     names.add(name);
                                 }
