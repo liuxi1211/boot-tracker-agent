@@ -62,7 +62,7 @@ public class BootTrackerAgent {
                     }
                     return false;
                 })
-        ).transform((builder, typeDescription, classLoader, module, protectionDomain) ->
+        ).transform((builder, typeDescription, classLoader, module) ->
                 builder.method(ElementMatchers.not(ElementMatchers.named("equals"))
                                 .and(ElementMatchers.not(ElementMatchers.named("hashCode")))
                                 .and(ElementMatchers.not(ElementMatchers.named("toString")))
