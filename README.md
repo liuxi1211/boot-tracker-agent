@@ -1,6 +1,6 @@
 # boot-tracker-agent
 
-**springboot 项目启动耗时分析**
+**springboot 项目启动耗时分析工具**
 
 ### 1. 项目介绍
 
