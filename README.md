@@ -81,13 +81,13 @@
 | 参数       | 描述                                                         | 案例                                                       |
 | ---------- | ------------------------------------------------------------ | ---------------------------------------------------------- |
 | ignoretime | 忽略耗时, 单位 ms, 默认值 100, 方法耗时低于指定值数据不采集,减小数据文件大小 | ignoretime=100                                             |
-| names      | 扩展类, 当需要进一步分析某个类耗时,可以通过 names 配置, 多个用逗号分割 | 例如：想进一步分析 apollo 耗时，可以添加 names=com.ctrip.framework.apollo.ConfigService             |
-| interfaces | 扩展接口, 指定接口的所有实现类都将打印方法耗时,多个用逗号分隔   | interfaces=org.springframework.context.ApplicationListener |
+| names      | 扩展类, 当需要进一步分析某个类耗时,可以通过 names 配置, 多个用分号分割 | 例如：想进一步分析 apollo 耗时，可以添加 names=com.ctrip.framework.apollo.ConfigService             |
+| interfaces | 扩展接口, 指定接口的所有实现类都将打印方法耗时,多个用分号分隔   | interfaces=org.springframework.context.ApplicationListener |
 | path       | 自定义耗时数据文件路径, 默认系统临时目录                     | path=D:\JavaProject                                        |
 
 综合配置案例：
 ```properties
--javaagent:C:\Users\windy\Desktop\boot-tracker-agent.jar=path=D:\JavaProject,names=com.ctrip.framework.apollo.ConfigService
+-javaagent:C:\Users\windy\Desktop\boot-tracker-agent.jar=path=D:\JavaProject,names=com.ctrip.framework.apollo.ConfigService;com.xxx
 ```
 
 
